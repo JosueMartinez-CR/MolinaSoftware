@@ -7,7 +7,7 @@ CREATE TABLE supermercado (
 
 CREATE TABLE telefonosSupermecado (
 	idSupermercado smallint NOT NULL,
-	telefono char(9), 
+	telefono FTelefono, 
 
 	constraint PK_telefonos_supermercado
 		primary key (idSupermercado,telefono),
@@ -15,14 +15,13 @@ CREATE TABLE telefonosSupermecado (
 	constraint FK_telefonos_supermercado_id
 		foreign key (idSupermercado) references supermercado,
 
-	constraint CHK_telefonos_personas_telefono
-		check (telefono like ('[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]'))
+
 	);
 
 
 CREATE TABLE correosSupermercado (
 	idSupermercado smallint NOT NULL,
-	correo varchar(64) NOT NULL
+	correo FCorreo,
 
 	constraint PK_correos_supermercado
 		primary key (idSupermercado,correo),
@@ -30,8 +29,7 @@ CREATE TABLE correosSupermercado (
 	constraint FK_correo_supermercado_id
 		foreign key (idSupermercado) references supermercado,
 
-	constraint CHK_correo_s
-		check (correo like '%_@__%.__%')
+	
 );
 -------------------------------------------Direcciones-----------------------------------
 CREATE TABLE provincia (
@@ -111,7 +109,7 @@ CREATE TABLE trabajador(
 
 
 CREATE TABLE empleado(
-	codigoEmpleado char(6) NOT NULL PRIMARY KEY,
+	codigoEmpleado FcodigoEmpleado PRIMARY KEY,
 	idTrabajador int NOT NULL, 
 
 	constraint FK_empleado_trabajador
@@ -120,7 +118,7 @@ CREATE TABLE empleado(
 );
 
 CREATE TABLE administrador(
-	codigoAdministrador char(6) NOT NULL PRIMARY KEY,
+	codigoAdministrador FcodigoAdmin PRIMARY KEY,
 	idTrabajador int NOT NULL,
 
 	constraint FK_admin_trabajador
@@ -137,7 +135,7 @@ CREATE TABLE proveedores (
 
 CREATE TABLE telefonosProveedores (
 	idProveedor int NOT NULL,
-	telefono char(9) NOT NULL,
+	telefono FTelefono,
 
 	constraint PK_telefonos_proveedor
 		primary key (idProveedor,telefono),
@@ -145,28 +143,25 @@ CREATE TABLE telefonosProveedores (
 	constraint FK_telefonos_proveedor_id
 		foreign key (idProveedor) references proveedores,
 
-	constraint CHK_telefonos_proveedores_telefono
-		check (telefono like ('[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]'))
+	
 	);
 
 CREATE TABLE correosProveedores (
 	idProveedor int NOT NULL,
-	correo varchar(32) NOT NULL
+	correo FCorreo,
 
 	constraint PK_correos_proveedor
 		primary key (idProveedor,correo),
 
 	constraint FK_correo_proveedor_id
 		foreign key (idProveedor) references proveedores,
-
-	constraint CHK_correo
-		check (correo like '%_@__%.__%')
 );
 
+
 CREATE TABLE mercaderia (
-	 idMercaderia int NOT NULL PRIMARY KEY,
+	 idMercaderia FidMercaderia PRIMARY KEY,
 	 idProveedor int NOT NULL,
-	 codigoAdministrador char(6) NOT NULL,
+	 codigoAdministrador FcodigoAdmin,
 	 fechaIngreso date NOT NULL,
 	 cantidadProductos int NOT NULL
 
@@ -178,7 +173,7 @@ CREATE TABLE mercaderia (
 
 CREATE TABLE productos (
 	codigoProducto char(12) NOT NULL PRIMARY KEY,
-	idMercaderia int NOT NULL,
+	idMercaderia FidMercaderia,
 	idCategoria smallint NOT NULL,
 	nombre varchar(32) NOT NULL,
 	precioVenta smallmoney NOT NULL,
@@ -200,7 +195,7 @@ CREATE TABLE productos (
 ------------------------------------------Control de Activos-----------------------------
 CREATE TABLE controlActivos(
 	idControl int NOT NULL PRIMARY KEY,
-	codigoEmpleado char(6) NOT NULL,
+	codigoEmpleado FcodigoEmpleado,
 	codigoProducto char(12) NOT NULL,
 	fecha date NOT NULL,
 	cantidadEnStock int NOT NULL,
@@ -228,8 +223,56 @@ CREATE TABLE supercadoProveedores (
 	constraint supercadoProveedores_supermercado
 		foreign key(idSupermercado) references supermercado,
 	constraint supercadoProveedores_proveedores
-		foreign key (idProveedor) references proveedores
+		foreign key (idProveedor) references proveedores,
   );
 
 
 
+
+ -------------------------------DATATYPE+RULE---------------------------
+
+ ------------------Formato Telefonos ---------------------------
+CREATE RULE RTelefono AS 
+	@telefono like ('[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]')
+GO
+
+EXEC sp_addtype 		FTelefono,	'char(9)',		'not null'
+GO
+
+EXEC sp_bindrule 	'RTelefono', 'FTelefono'
+GO
+-----------------Formato Correos-----------------------------
+CREATE RULE RCorreo AS 
+	@correo like '%_@__%.__%'
+GO
+EXEC sp_addtype 		FCorreo,	'varchar(64)',		'not null'
+GO
+EXEC sp_bindrule 	'RCorreo', 'FCorreo'
+GO
+
+----------------Formato idMercadería --------------------
+CREATE RULE RMercaderia AS 
+	@idMercaderia like ('MC'+cast(YEAR(GETDATE()) as varchar(4))+'%')
+GO
+EXEC sp_addtype 		FidMercaderia,	'char(12)',		'not null'
+GO
+EXEC sp_bindrule 	'RMercaderia', 'FidMercaderia'
+GO
+
+-----------------Formato codigoAdmin --------------------------
+CREATE RULE RcodigoAdmin AS 
+	@codigoAdministrador like ('A[0-9][0-9][0-9][0-9][0-9]')
+GO
+EXEC sp_addtype 		FcodigoAdmin,	'char(6)',		'not null'
+GO
+EXEC sp_bindrule 	'RcodigoAdmin', 'FcodigoAdmin'
+GO
+
+-----------------Formato codigoEmpleado --------------------------
+CREATE RULE RcodigoEmpleado AS 
+	@codigoEmpleado like ('E[0-9][0-9][0-9][0-9][0-9]')
+GO
+EXEC sp_addtype 		FcodigoEmpleado,	'char(6)',		'not null'
+GO
+EXEC sp_bindrule 	'RcodigoEmpleado', 'FcodigoEmpleado'
+GO
