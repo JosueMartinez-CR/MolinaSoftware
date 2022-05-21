@@ -1,12 +1,65 @@
 CREATE DATABASE MOLINASOFTWARE
 
+ -------------------------------DATATYPE+RULE---------------------------
+
+ ------------------Formato Telefonos ---------------------------
+CREATE RULE RTelefono AS 
+	@telefono like ('[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]')
+GO
+
+EXEC sp_addtype 		FTelefono,	'char(9)',		'not null'
+GO
+
+EXEC sp_bindrule 	'RTelefono', 'FTelefono'
+GO
+-----------------Formato Correos-----------------------------
+CREATE RULE RCorreo AS 
+	@correo like '%_@__%.__%'
+GO
+EXEC sp_addtype 		FCorreo,	'varchar(64)',		'not null'
+GO
+EXEC sp_bindrule 	'RCorreo', 'FCorreo'
+GO
+
+----------------Formato idMercadería --------------------
+CREATE RULE RMercaderia AS 
+	@idMercaderia like ('MC'+cast(YEAR(GETDATE()) as varchar(4))+'%')
+GO
+EXEC sp_addtype 		FidMercaderia,	'char(12)',		'not null'
+GO
+EXEC sp_bindrule 	'RMercaderia', 'FidMercaderia'
+GO
+
+-----------------Formato codigoAdmin --------------------------
+CREATE RULE RcodigoAdmin AS 
+	@codigoAdministrador like ('A[0-9][0-9][0-9][0-9][0-9]')
+GO
+EXEC sp_addtype 		FcodigoAdmin,	'char(6)',		'not null'
+GO
+EXEC sp_bindrule 	'RcodigoAdmin', 'FcodigoAdmin'
+GO
+
+-----------------Formato codigoEmpleado --------------------------
+CREATE RULE RcodigoEmpleado AS 
+	@codigoEmpleado like ('E[0-9][0-9][0-9][0-9][0-9]')
+GO
+EXEC sp_addtype 		FcodigoEmpleado,	'char(6)',		'not null'
+GO
+EXEC sp_bindrule 	'RcodigoEmpleado', 'FcodigoEmpleado'
+GO
+
+
+
+
+------------------------TABLAS-------------------------------------
+
 -------------------------------------Supermercado -----------------------------------------
 CREATE TABLE supermercado (
-	idSupermercado smallint NOT NULL PRIMARY KEY 
+	idSupermercado tinyint NOT NULL PRIMARY KEY 
 	);
 
 CREATE TABLE telefonosSupermecado (
-	idSupermercado smallint NOT NULL,
+	idSupermercado tinyint NOT NULL,
 	telefono FTelefono, 
 
 	constraint PK_telefonos_supermercado
@@ -19,8 +72,9 @@ CREATE TABLE telefonosSupermecado (
 	);
 
 
+
 CREATE TABLE correosSupermercado (
-	idSupermercado smallint NOT NULL,
+	idSupermercado tinyint NOT NULL,
 	correo FCorreo,
 
 	constraint PK_correos_supermercado
@@ -61,7 +115,7 @@ CREATE TABLE distrito (
 
 CREATE TABLE direccionSupermercado (
 	idDistrito tinyint NOT NULL,
-	idSupermercado smallint NOT NULL,
+	idSupermercado tinyint NOT NULL,
 	señas varchar(200) 
 
 	constraint PK_direccion
@@ -75,7 +129,7 @@ CREATE TABLE direccionSupermercado (
 ------------------------------Almacenamientos------------------------------
 CREATE TABLE zonaAlmacenamiento (
 	idZonaAlmacenamiento smallint NOT NULL PRIMARY KEY,
-	idSupermercado smallint NOT NULL,
+	idSupermercado tinyint NOT NULL,
 	nombre varchar(32) NOT NULL
 	
 	constraint FK_zonaAlm_supermercado 
@@ -98,7 +152,7 @@ CREATE TABLE categoria (
 ------------------------------------------Trabajadores-----------------------------------
 CREATE TABLE trabajador(
 	idTrabajador int NOT NULL PRIMARY KEY,
-	idSupermercado smallint NOT NULL,
+	idSupermercado tinyint NOT NULL,
 	nombre varchar(64) NOT NULL,
 	apellido1 varchar (32) NOT NULL,
 	apellido2 varchar (32) NOT NULL,
@@ -128,13 +182,15 @@ CREATE TABLE administrador(
 
 -------------------------------------------Proveedores------------------------------------
 CREATE TABLE proveedores (
-	idProveedor int NOT NULL PRIMARY KEY, 
+	idProveedor tinyint NOT NULL PRIMARY KEY, 
 	nombre varchar(32) NOT NULL,
 	
 	);
 
+	
+
 CREATE TABLE telefonosProveedores (
-	idProveedor int NOT NULL,
+	idProveedor tinyint NOT NULL,
 	telefono FTelefono,
 
 	constraint PK_telefonos_proveedor
@@ -147,7 +203,7 @@ CREATE TABLE telefonosProveedores (
 	);
 
 CREATE TABLE correosProveedores (
-	idProveedor int NOT NULL,
+	idProveedor tinyint NOT NULL,
 	correo FCorreo,
 
 	constraint PK_correos_proveedor
@@ -160,7 +216,7 @@ CREATE TABLE correosProveedores (
 
 CREATE TABLE mercaderia (
 	 idMercaderia FidMercaderia PRIMARY KEY,
-	 idProveedor int NOT NULL,
+	 idProveedor tinyint NOT NULL,
 	 codigoAdministrador FcodigoAdmin,
 	 fechaIngreso date NOT NULL,
 	 cantidadProductos int NOT NULL
@@ -215,8 +271,8 @@ CREATE TABLE controlActivos(
 ----------------------------------------Union Supermercado Proveedores --------------------
 CREATE TABLE supercadoProveedores ( 
 
-	idSupermercado smallint NOT NULL ,
-	idProveedor int NOT NULL  
+	idSupermercado tinyint NOT NULL ,
+	idProveedor tinyint NOT NULL  
 
 	constraint supermercado_proveedores 
 		primary key (idSupermercado,idProveedor),
@@ -228,51 +284,3 @@ CREATE TABLE supercadoProveedores (
 
 
 
-
- -------------------------------DATATYPE+RULE---------------------------
-
- ------------------Formato Telefonos ---------------------------
-CREATE RULE RTelefono AS 
-	@telefono like ('[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]')
-GO
-
-EXEC sp_addtype 		FTelefono,	'char(9)',		'not null'
-GO
-
-EXEC sp_bindrule 	'RTelefono', 'FTelefono'
-GO
------------------Formato Correos-----------------------------
-CREATE RULE RCorreo AS 
-	@correo like '%_@__%.__%'
-GO
-EXEC sp_addtype 		FCorreo,	'varchar(64)',		'not null'
-GO
-EXEC sp_bindrule 	'RCorreo', 'FCorreo'
-GO
-
-----------------Formato idMercadería --------------------
-CREATE RULE RMercaderia AS 
-	@idMercaderia like ('MC'+cast(YEAR(GETDATE()) as varchar(4))+'%')
-GO
-EXEC sp_addtype 		FidMercaderia,	'char(12)',		'not null'
-GO
-EXEC sp_bindrule 	'RMercaderia', 'FidMercaderia'
-GO
-
------------------Formato codigoAdmin --------------------------
-CREATE RULE RcodigoAdmin AS 
-	@codigoAdministrador like ('A[0-9][0-9][0-9][0-9][0-9]')
-GO
-EXEC sp_addtype 		FcodigoAdmin,	'char(6)',		'not null'
-GO
-EXEC sp_bindrule 	'RcodigoAdmin', 'FcodigoAdmin'
-GO
-
------------------Formato codigoEmpleado --------------------------
-CREATE RULE RcodigoEmpleado AS 
-	@codigoEmpleado like ('E[0-9][0-9][0-9][0-9][0-9]')
-GO
-EXEC sp_addtype 		FcodigoEmpleado,	'char(6)',		'not null'
-GO
-EXEC sp_bindrule 	'RcodigoEmpleado', 'FcodigoEmpleado'
-GO
