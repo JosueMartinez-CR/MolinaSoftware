@@ -1,4 +1,5 @@
 CREATE DATABASE MOLINASOFTWARE
+USE [MOLINASOFTWARE]
 
  -------------------------------DATATYPE+RULE---------------------------
 
@@ -229,7 +230,6 @@ CREATE TABLE mercaderia (
 
 CREATE TABLE productos (
 	codigoProducto char(12) NOT NULL PRIMARY KEY,
-	idMercaderia FidMercaderia,
 	idCategoria smallint NOT NULL,
 	nombre varchar(32) NOT NULL,
 	precioVenta smallmoney NOT NULL,
@@ -237,13 +237,29 @@ CREATE TABLE productos (
 	estado tinyint NOT NULL,
 	cantidad int NOT NULL
 
-	constraint FK_productos_mercaderia
-		foreign key (idMercaderia) references mercaderia,
-
 	constraint FK_productos_categoria
 		foreign key (idCategoria) references categoria,
 );
 
+-------Un producto puede venir de varias mercaderias, es decir, la semana pasada trajeron caja
+---esta semana volvieron a traer (son diversas mercaderias)
+
+CREATE TABLE mercaderiaProductos (
+	idMercaderia FidMercaderia,
+	codigoProducto char(12),
+	cantidadProducts smallint,
+
+
+
+	constraint PK_productos_mercaderia 
+		primary key (idMercaderia,codigoProducto),
+
+	constraint FK_productos_mercaderia
+		foreign key (idMercaderia) references mercaderia,
+	constraint FK_mercaderia_productos
+		foreign key (codigoProducto) references productos,
+	
+);
 
 
 

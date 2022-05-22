@@ -52,6 +52,7 @@ AS
 		end;
 
 
+GO
 
 CREATE PROCEDURE ins_supermercado
 	@idSupermercado tinyint,
@@ -103,4 +104,70 @@ AS
 			commit transaction
 		end;
 
+
+GO
+
+CREATE PROCEDURE ins_telefono_proveedor
+	@idProveedor tinyint,
+	@telefono FTelefono
+
+AS
+	
+	insert into telefonosProveedores (idProveedor,telefono)
+	values (@idProveedor,@telefono)
+
+go
+
+CREATE PROCEDURE ins_correo_proveedor
+	@idProveedor tinyint,
+	@correo FCorreo
+
+AS
+	
+	insert into correosProveedores (idProveedor, correo)
+	values (@idProveedor,@correo)
+
+go
+
+
+
+CREATE PROCEDURE ins_telefono_supermercado
+	@idSupermercado tinyint,
+	@telefono FTelefono
+
+AS
+	insert into telefonosSupermecado(idSupermercado,telefono)
+	values (@idSupermercado,@telefono)
+go
+
+CREATE PROCEDURE ins_correo_supermercado
+	@idSupermercado tinyint,
+	@correo FCorreo
+AS
+	insert into correosSupermercado(idSupermercado, correo)
+	values (@idSupermercado,@correo)
+go
+
+
+
+CREATE PROCEDURE ins_correo_proveedor
+	@idProveedor tinyint,
+	@correo FCorreo
+AS
+	insert into correosProveedores (idProveedor, correo)
+	values (@idProveedor,@correo)
+go
+
+
+CREATE PROCEDURE ins_mercaderia 
+	 @idMercaderia FidMercaderia,
+	 @idProveedor tinyint ,
+	 @codigoAdministrador FcodigoAdmin,
+	 @fechaIngreso date ,
+	 @cantidadProductos int
+AS
+    insert into mercaderia idMercaderia,idProveedor,codigoAdministrador ,fechaIngreso,cantidadProductos
+	values (@idMercaderia,@idProveedor,@codigoAdministrador ,@fechaIngreso,@cantidadProductos)
+
+go
 
