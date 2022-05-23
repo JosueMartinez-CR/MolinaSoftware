@@ -152,7 +152,7 @@ CREATE TABLE categoria (
 
 ------------------------------------------Trabajadores-----------------------------------
 CREATE TABLE trabajador(
-	idTrabajador int NOT NULL PRIMARY KEY,
+	idTrabajador int  NOT NULL PRIMARY KEY,
 	idSupermercado tinyint NOT NULL,
 	nombre varchar(64) NOT NULL,
 	apellido1 varchar (32) NOT NULL,
