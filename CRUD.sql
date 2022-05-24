@@ -340,7 +340,6 @@ AS
 	if @@error>0
 		begin
 			print ('No se insertó la mercaderia')
-			set @error='True';
 			rollback transaction
 		end
 		else
@@ -350,7 +349,35 @@ AS
 		end;
 go
 
-CREATE PROCEDURE ins_productos
+
+CREATE PROCEDURE ins_zonaAlmacenamiento 
+	@idZonaAlmacenamiento smallint,
+	@idSupermercado tinyint,
+	@nombre varchar(32)
+
+	AS 
+		insert into zonaAlmacenamiento(idZonaAlmacenamiento,idSupermercado,nombre)
+		values (@idZonaAlmacenamiento,@idSupermercado,@nombre)
+
+
+go
+
+
+CREATE PROCEDURE ins_categoria 
+	@idCategoria smallint,
+	@idZonaAlmacenamiento smallint,
+	@tipo varchar(32)
+
+	AS 
+		insert into categoria(idCategoria,idZonaAlmacenamiento,tipo,cantidadProductos)
+		values (@idCategoria,@idZonaAlmacenamiento,@tipo,0)
+
+go
+
+
+
+
+CREATE PROCEDURE ins_nuevo_producto
 	@idMercaderia FidMercaderia,
 	@codigoProducto char(12),
 	@idCategoria smallint,
@@ -398,7 +425,14 @@ CREATE PROCEDURE ins_productos
 	go
 			
 
+exec ins_zonaAlmacenamiento 123,123,'Frescas'
+exec ins_categoria 123,123,'verduras'
+
+exec ins_proveedor 123,123,'cositas frescas','4566-1233','cosfre@zv.com'
+exec ins_mercaderia 'MC2022123456',123,'A123456','2022-05-03',123
+exec ins_nuevo_producto 'MC2022123456',123456789123,123,'camote',255,150,1,12
 
 
+CREATE PROCEDURE ins_
 
 

@@ -237,9 +237,10 @@ CREATE TABLE productos (
 	estado tinyint NOT NULL,
 	cantidad int NOT NULL
 
-	constraint FK_productos_categoria
-		foreign key (idCategoria) references categoria,
+	
 );
+
+Alter table productos drop constraint FK_productos_categoria
 
 -------Un producto puede venir de varias mercaderias, es decir, la semana pasada trajeron caja
 ---esta semana volvieron a traer (son diversas mercaderias)
