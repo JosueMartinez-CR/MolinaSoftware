@@ -62,9 +62,7 @@ AS
 			commit transaction
 		end;
 
-
 GO
-
 
 CREATE PROCEDURE ins_supermercado
 	@idSupermercado tinyint,
@@ -143,7 +141,6 @@ AS
 
 go
 
-
 CREATE PROCEDURE ins_correo_proveedor
 	@idProveedor tinyint,
 	@correo FCorreo
@@ -195,8 +192,6 @@ AS
 		end;
 go
 
-
-
 CREATE PROCEDURE ins_correo_supermercado
 	@idSupermercado tinyint,
 	@correo FCorreo
@@ -221,8 +216,6 @@ AS
 			commit transaction
 		end;
 go
-
-
 
 CREATE PROCEDURE ins_trabajador_admin
     @idTrabajador int,
@@ -316,11 +309,6 @@ CREATE PROCEDURE ins_trabajador_empleado
 
 	go		
 
-
-
-
-
-------------------------------------------------------
 CREATE PROCEDURE ins_mercaderia 
 	 @idMercaderia FidMercaderia,
 	 @idProveedor tinyint ,
@@ -349,7 +337,6 @@ AS
 		end;
 go
 
-
 CREATE PROCEDURE ins_zonaAlmacenamiento 
 	@idZonaAlmacenamiento smallint,
 	@idSupermercado tinyint,
@@ -362,7 +349,6 @@ CREATE PROCEDURE ins_zonaAlmacenamiento
 
 go
 
-
 CREATE PROCEDURE ins_categoria 
 	@idCategoria smallint,
 	@idZonaAlmacenamiento smallint,
@@ -373,9 +359,6 @@ CREATE PROCEDURE ins_categoria
 		values (@idCategoria,@idZonaAlmacenamiento,@tipo,0)
 
 go
-
-
-
 
 CREATE PROCEDURE ins_nuevo_producto
 	@idMercaderia FidMercaderia,
@@ -425,14 +408,37 @@ CREATE PROCEDURE ins_nuevo_producto
 	go
 			
 
+CREATE PROCEDURE ins_controlActivos 
+	@idControl int,
+	@codigoEmpleado FcodigoEmpleado,
+	@codigoProducto char(12),
+	@cantidaEnStock int	
+	as
+	declare
+		@enSistema int, @fecha date;
+
+		set @enSistema=(select cantidad from productos where codigoProducto = @codigoProducto);
+		Set @fecha= (getdate());
+
+		insert into controlActivos(idControl,codigoEmpleado,codigoProducto,fecha,cantidadEnStock,cantidadEnSistema)
+		values (@idControl,@codigoEmpleado,@codigoProducto,@fecha,@cantidaEnStock,@enSistema)
+
+go
+
+
+------pruebas--------
 exec ins_zonaAlmacenamiento 123,123,'Frescas'
 exec ins_categoria 123,123,'verduras'
 
 exec ins_proveedor 123,123,'cositas frescas','4566-1233','cosfre@zv.com'
 exec ins_mercaderia 'MC2022123456',123,'A123456','2022-05-03',123
 exec ins_nuevo_producto 'MC2022123456',123456789123,123,'camote',255,150,1,12
+go
 
+select *from controlActivos
 
-CREATE PROCEDURE ins_
+exec ins_controlActivos 2022,'E12345',123456789123,250
+go
+
 
 
