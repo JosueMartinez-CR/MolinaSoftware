@@ -106,7 +106,7 @@ AS
 		--Validando tran---
 		if @error='True'
 		begin
-			print ('NO se registró el proveedor')
+			print ('NO se registró el supermercado')
 			rollback transaction
 		end
 
@@ -317,9 +317,6 @@ CREATE PROCEDURE ins_trabajador_empleado
 	go		
 
 
-
-
-
 ------------------------------------------------------
 CREATE PROCEDURE ins_mercaderia 
 	 @idMercaderia FidMercaderia,
@@ -375,8 +372,6 @@ CREATE PROCEDURE ins_categoria
 go
 
 
-
-
 CREATE PROCEDURE ins_nuevo_producto
 	@idMercaderia FidMercaderia,
 	@codigoProducto char(12),
@@ -425,6 +420,94 @@ CREATE PROCEDURE ins_nuevo_producto
 	go
 			
 
+
+-----------------------------vistas---------------------------------
+--create view productos as select * from
+--create view productos as select *
+--create view productos as select *
+
+go
+----------procedimientos con trigger-------------
+create or alter trigger trigger_evita_mod_supermercado
+on supermercado 
+for insert,update
+as 
+	declare 
+		@cantSupermercado tinyint;
+		
+		set @cantSupermercado=(select count(*) from supermercado);
+		if (@cantSupermercado>1)
+		begin
+			RAISERROR('No se puede incertar mas de un supermercado',16,1)
+			rollback;
+		end
+		else
+		begin
+			print('Se incerto correctamente')
+		end;
+go
+
+create or alter trigger dbo.trigger_validar_telefono_proveedor
+on telefonosProveedores
+for insert,update
+as
+	declare
+		@cant_telefonos tinyint,
+		@idProvedor tinyint;
+		set @idProvedor=(select idProveedor from inserted);
+		set @cant_telefonos=(select COUNT(telefono) from telefonosProveedores where idProveedor=@idProvedor);
+
+	if (@cant_telefonos>2)
+	begin
+		RAISERROR('Los proveedores tienen un limite de dos telefonos',16,1)
+		rollback;
+	end
+	else
+	begin
+		print ('este proveedor tiene un total de '+cast (@cant_telefonos as char(1))+' telefonos ')	
+	end;
+go
+
+create or alter trigger dbo.trigger_validar_correo_proveedor
+on correosProveedores
+for insert,update
+as
+	declare
+		@cant_correos tinyint,
+		@idProvedor tinyint;
+		set @idProvedor=(select idProveedor from inserted);
+		set @cant_correos=(select COUNT(correo) from correosProveedores where idProveedor=@idProvedor);
+
+	if (@cant_correos>2)
+	begin
+		RAISERROR('Los proveedores tienen un limite de dos correos',16,1)
+		rollback;
+	end
+	else
+	begin
+		print ('este proveedor tiene un total de '+cast (@cant_correos as char(1))+' correos ')	
+	end;
+
+
+
+
+
+
+
+go
+
+
+
+
+
+
+
+--------------------------------datos-----------------------------------
+
+
+execute ins_supermercado 1, '8895-3002','algo@gmail.com'
+
+
 exec ins_zonaAlmacenamiento 123,123,'Frescas'
 exec ins_categoria 123,123,'verduras'
 
@@ -433,6 +516,23 @@ exec ins_mercaderia 'MC2022123456',123,'A123456','2022-05-03',123
 exec ins_nuevo_producto 'MC2022123456',123456789123,123,'camote',255,150,1,12
 
 
-CREATE PROCEDURE ins_
+execute ins_proveedor 1,1, 'e', '2020-2020', 'pan@gmail.com'
+execute ins_proveedor 2,1, 'x', '2020-2020', 'pan@gmail.com'
+execute ins_proveedor 3,1, 'b', '2020-2020', 'pan@gmail.com'
+
+execute ins_telefono_proveedor 1,'0080-0682'
+execute ins_telefono_proveedor 1,'0080-0681'
+delete from telefonosProveedores where telefono='0080-0681'
+delete from telefonosProveedores where telefono='0080-0682'
 
 
+
+execute ins_correo_proveedor 1,'cooreoooo@gmail.com'
+delete from correosProveedores where correo='cooreo@gmail.com'
+delete from Proveedores where telefono='0080-0682'
+
+select * from telefonosProveedores
+select * from Proveedores
+select * from correosProveedores
+execute ins_supermercado 1, '8895-3002','algo@gmail.com'
+select * from supermercado

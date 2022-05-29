@@ -1,4 +1,5 @@
 CREATE DATABASE MOLINASOFTWARE
+
 USE [MOLINASOFTWARE]
 
  -------------------------------DATATYPE+RULE---------------------------
