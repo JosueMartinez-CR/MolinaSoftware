@@ -1,5 +1,8 @@
 
 use[MOLINASOFTWARE]
+
+go
+
 CREATE PROCEDURE ins_proveedor
 	@idProveedor tinyint,
 	@idSupermercado tinyint,
@@ -195,8 +198,6 @@ AS
 		end;
 go
 
-
-
 CREATE PROCEDURE ins_correo_supermercado
 	@idSupermercado tinyint,
 	@correo FCorreo
@@ -221,8 +222,6 @@ AS
 			commit transaction
 		end;
 go
-
-
 
 CREATE PROCEDURE ins_trabajador_admin
     @idTrabajador int,
@@ -420,6 +419,37 @@ CREATE PROCEDURE ins_nuevo_producto
 	go
 			
 
+-----------procedimientos agragados----------------
+CREATE PROCEDURE ins_controlActivos 
+	 @idControl int,
+	 @codigoempleado FcodigoEmpleado,
+	 @codigoProducto char(12),
+	 @fecha date ,
+	 @cantidadEnStock int,
+	 @cantidadEnSistema int
+AS
+	declare
+		@error bit;
+		set @error='False';
+
+	begin tran	
+
+		insert into controlActivos (idControl,codigoEmpleado,codigoProducto,fecha,cantidadEnStock,cantidadEnSistema)
+		values (@idControl,@codigoEmpleado,@codigoProducto,@fecha,@cantidadEnStock,@cantidadEnSistema)
+
+	if @@error>0
+		begin
+			print ('No se insertó el control activos')
+			rollback transaction
+		end
+		else
+		begin
+			print ('Se insertó el control activos')
+			commit transaction
+		end;
+go
+
+
 
 -----------------------------vistas---------------------------------
 --create view productos as select * from
@@ -505,34 +535,87 @@ go
 --------------------------------datos-----------------------------------
 
 
-execute ins_supermercado 1, '8895-3002','algo@gmail.com'
+execute ins_supermercado 1, '8895-3002','supermolina@gmail.com'
+--falta ins dir supermercado
 
 
-exec ins_zonaAlmacenamiento 123,123,'Frescas'
-exec ins_categoria 123,123,'verduras'
+execute ins_proveedor 1,1, 'Cocacola Femsa', '1233-2342', 'coca@gmail.com'
+execute ins_proveedor 2,1, 'Dos Pinos', '2123-2332', 'dospinos@gmail.com'
+execute ins_proveedor 3,1, 'Carnes chiken', '6425-6432', 'polloschiken@gmail.com'
+execute ins_proveedor 4,1, 'Helados Frios', '5344-6643', 'heladoFreeze@gmail.com'
+execute ins_proveedor 5,1, 'Whisky While', '2342-1234', 'WWWWW@gmail.com'
+execute ins_proveedor 6,1, 'Arrocera Norte', '2555-4312', 'Arnort345@gmail.com'
+exec ins_proveedor 123,1,'cositas frescas','4566-1233','cosfre@zv.com'
 
-exec ins_proveedor 123,123,'cositas frescas','4566-1233','cosfre@zv.com'
-exec ins_mercaderia 'MC2022123456',123,'A123456','2022-05-03',123
-exec ins_nuevo_producto 'MC2022123456',123456789123,123,'camote',255,150,1,12
 
-
-execute ins_proveedor 1,1, 'e', '2020-2020', 'pan@gmail.com'
-execute ins_proveedor 2,1, 'x', '2020-2020', 'pan@gmail.com'
-execute ins_proveedor 3,1, 'b', '2020-2020', 'pan@gmail.com'
 
 execute ins_telefono_proveedor 1,'0080-0682'
-execute ins_telefono_proveedor 1,'0080-0681'
-delete from telefonosProveedores where telefono='0080-0681'
-delete from telefonosProveedores where telefono='0080-0682'
+execute ins_telefono_proveedor 3,'0080-0681'
+
+
+execute ins_correo_proveedor 1,'dondondond@gmail.com'
+execute ins_correo_proveedor 6,'arrobabryam@gmail.com'
+
+
+execute ins_trabajador_admin 1,'A123456',1,'Raul','Montenegro','Varalles'
+execute ins_trabajador_admin 2,'A123457',1,'Miguel','Alvarado','Ugalde'
+execute ins_trabajador_admin 3,'A123458',1,'Jose','Jimenez','Varela'
+execute ins_trabajador_admin 4,'A123459',1,'Louis','Morales','Torres'
+
+
+execute ins_trabajador_empleado 5,'E123456',1,'Pablo','Perez','Varalles'
+execute ins_trabajador_empleado 6,'E133457',1,'Martin','Bustamante','Altozano'
+execute ins_trabajador_empleado 7,'E137458',1,'Brayan','Rojas','Cascante'
+execute ins_trabajador_empleado 8,'E138459',1,'Rodrigo','Liarte','Lizano'
 
 
 
-execute ins_correo_proveedor 1,'cooreoooo@gmail.com'
-delete from correosProveedores where correo='cooreo@gmail.com'
-delete from Proveedores where telefono='0080-0682'
+execute ins_mercaderia 'MC2022123456',1,'A123456','2022-05-03',123
+execute ins_mercaderia 'MC2022123457',2,'A123456','2022-05-03',123
+execute ins_mercaderia 'MC2022123458',3,'A123457','2022-05-03',123
+execute ins_mercaderia 'MC2022123459',4,'A123457','2022-05-03',123
+execute ins_mercaderia 'MC2022123450',5,'A123458','2022-05-03',123
 
-select * from telefonosProveedores
-select * from Proveedores
-select * from correosProveedores
-execute ins_supermercado 1, '8895-3002','algo@gmail.com'
-select * from supermercado
+
+
+exec ins_zonaAlmacenamiento 1,1,'Abarrotez'
+exec ins_zonaAlmacenamiento 2,1,'Bebidas'
+exec ins_zonaAlmacenamiento 3,1,'Limpieza'
+exec ins_zonaAlmacenamiento 4,1,'Refrigerado'
+
+
+exec ins_categoria 1,2,'bebida'
+exec ins_categoria 2,1,'verdura'
+exec ins_categoria 3,4,'carnes'
+exec ins_categoria 4,3,'detergentes'
+exec ins_categoria 5,1,'snacks'
+
+
+
+
+
+
+execute ins_nuevo_producto 'MC2022123456',123456789123,2,'camote',255,150,1,12
+execute ins_nuevo_producto 'MC2022123456',123456789124,2,'Yuca',255,150,1,12
+execute ins_nuevo_producto 'MC2022123456',123456789125,2,'papa',255,150,1,12
+
+execute ins_nuevo_producto 'MC2022123457',123456789126,3,'filete',255,150,1,12
+execute ins_nuevo_producto 'MC2022123457',123456789127,3,'pollo',255,150,1,12
+execute ins_nuevo_producto 'MC2022123457',123456789128,3,'salchichon',255,150,1,12
+
+execute ins_nuevo_producto 'MC2022123458',123456789129,1,'cocacola',255,150,1,12
+execute ins_nuevo_producto 'MC2022123458',123456789133,1,'pepsi',255,150,1,12
+
+execute ins_nuevo_producto 'MC2022123459',123456789134,4,'ace',255,150,1,12
+execute ins_nuevo_producto 'MC2022123459',123456789135,4,'ariel',255,150,1,12
+
+execute ins_nuevo_producto 'MC2022123450',123456789136,5,'picarita',255,150,1,12
+execute ins_nuevo_producto 'MC2022123450',123456789137,5,'papiola',255,150,1,12
+
+execute ins_controlActivos 1,'E12345',123456789123,'2022-05-03',15,15
+
+alter idcategoria  productos where codigoProducto=123456789136
+
+
+
+select * from productos

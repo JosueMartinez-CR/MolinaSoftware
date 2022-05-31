@@ -1,7 +1,7 @@
 CREATE DATABASE MOLINASOFTWARE
 
 USE [MOLINASOFTWARE]
-
+go
  -------------------------------DATATYPE+RULE---------------------------
 
  ------------------Formato Telefonos ---------------------------
@@ -73,7 +73,7 @@ CREATE TABLE telefonosSupermecado (
 
 	);
 
-
+go
 
 CREATE TABLE correosSupermercado (
 	idSupermercado tinyint NOT NULL,
@@ -241,7 +241,7 @@ CREATE TABLE productos (
 	
 );
 
-Alter table productos drop constraint FK_productos_categoria
+--Alter table productos drop constraint FK_productos_categoria
 
 -------Un producto puede venir de varias mercaderias, es decir, la semana pasada trajeron caja
 ---esta semana volvieron a traer (son diversas mercaderias)
