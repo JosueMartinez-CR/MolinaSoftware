@@ -1,5 +1,6 @@
 
 use[MOLINASOFTWARE]
+go
 CREATE PROCEDURE ins_proveedor
 	@idProveedor tinyint,
 	@idSupermercado tinyint,
@@ -426,16 +427,88 @@ CREATE PROCEDURE ins_controlActivos
 go
 
 
+-------------------------cursores
 
 
 
-
------------------------------vistas---------------------------------
---create view productos as select * from
---create view productos as select *
---create view productos as select *
+create procedure cursor_descontinuar
+as
+	declare
+		@ganancia smallmoney,
+		@precioCompra smallmoney ,
+		@precioVenta smallmoney,
+		@codigoProducto char(12);
+	declare cursor1 CURSOR for select codigoProducto,precioCompra,precioVenta from productos;
+	open cursor1
+	fetch next from cursor1 into @codigoProducto,@precioCompra,@precioVenta
+	while @@FETCH_STATUS = 0
+	begin
+		set @ganancia=@precioVenta-@precioCompra;
+		if @ganancia<=0
+		begin
+			update productos 
+			set		estado=0
+			where codigoProducto=@codigoProducto;
+		end;
+		fetch next from cursor1 into @codigoProducto,@precioCompra,@precioVenta
+	end;
+	CLOSE cursor1
+	DEALLOCATE cursor1
 
 go
+create procedure cursor_vigente
+as
+	declare
+		@ganancia smallmoney,
+		@precioCompra smallmoney ,
+		@precioVenta smallmoney,
+		@codigoProducto char(12);
+	declare cursor1 CURSOR for select codigoProducto,precioCompra,precioVenta from productos;
+	open cursor1
+	fetch next from cursor1 into @codigoProducto,@precioCompra,@precioVenta
+	while @@FETCH_STATUS = 0
+	begin
+		set @ganancia=@precioVenta-@precioCompra;
+		if @ganancia>0
+		begin
+			update productos 
+			set		estado=1
+			where codigoProducto=@codigoProducto;
+		end;
+		fetch next from cursor1 into @codigoProducto,@precioCompra,@precioVenta
+	end;
+	CLOSE cursor1
+	DEALLOCATE cursor1
+-----------------------------vistas---------------------------------
+create view info_productos as 
+select p.nombre as producto, c.tipo as categoria, z.nombre AS almacen 
+from productos p, categoria c,zonaAlmacenamiento z 
+where p.idCategoria=c.idCategoria and z.idZonaAlmacenamiento=c.idZonaAlmacenamiento
+
+go
+
+create view info_proveedores as 
+
+select p.nombre, c.correo from proveedores p, correosProveedores c where p.idProveedor=c.idProveedor 
+union
+select p.nombre, t.telefono from proveedores p, telefonosProveedores t where p.idProveedor=t.idProveedor
+
+
+
+
+
+
+create view info_controles_mercaderia as 
+select t.nombre+' '+t.apellido1+' '+t.apellido2 as nombre_completo,a.codigoAdministrador from trabajador t, administrador a where t.idTrabajador=a.idTrabajador
+union
+select t.nombre+' '+t.apellido1+' '+t.apellido2 as nombre_completo,e.codigoEmpleado from trabajador t, empleado e where t.idTrabajador=e.idTrabajador
+
+select * from trabajador
+
+
+
+go
+
 ----------procedimientos con trigger-------------
 create or alter trigger trigger_evita_mod_supermercado
 on supermercado 
@@ -547,6 +620,20 @@ as
 		print ('este supermercado tiene un total de '+cast (@cant_correos as char(1))+' correos ')	
 	end;
 
+
+go
+
+-----------------------------indice
+create index idx_productoNombre
+on productos (nombre)
+
+
+create index idx_proveedorNombre
+on proveedores (nombre)
+
+create index idx_mercaderiaFecha
+on mercaderia (fechaIngreso)
+
 --------------------------------datos-----------------------------------
 
 
@@ -580,10 +667,10 @@ execute ins_correo_proveedor 1,'dondondond@gmail.com'
 execute ins_correo_proveedor 6,'arrobabryam@gmail.com'
 
 
-execute ins_trabajador_admin 1,'A123456',1,'Raul','Montenegro','Varalles'
+execute ins_trabajador_admin 1,'A122456',1,'Raul','Montenegro','Varalles'
 execute ins_trabajador_admin 2,'A123457',1,'Miguel','Alvarado','Ugalde'
-execute ins_trabajador_admin 3,'A123458',1,'Jose','Jimenez','Varela'
-execute ins_trabajador_admin 4,'A123459',1,'Louis','Morales','Torres'
+execute ins_trabajador_admin 3,'A127258',1,'Jose','Jimenez','Varela'
+execute ins_trabajador_admin 4,'A128259',1,'Louis','Morales','Torres'
 
 
 execute ins_trabajador_empleado 5,'E123456',1,'Pablo','Perez','Varalles'
@@ -635,16 +722,12 @@ execute ins_nuevo_producto 'MC2022123458',123456789133,1,'pepsi',255,150,1,12
 execute ins_nuevo_producto 'MC2022123459',123456789134,4,'ace',255,150,1,12
 execute ins_nuevo_producto 'MC2022123459',123456789135,4,'ariel',255,150,1,12
 
-execute ins_nuevo_producto 'MC2022123450',123456789136,5,'picarita',255,150,1,12
-execute ins_nuevo_producto 'MC2022123450',123456789137,5,'papiola',255,150,1,12
+execute ins_nuevo_producto 'MC2022123450',123456783136,5,'picarita',255,150,1,12
+execute ins_nuevo_producto 'MC2022123450',123456783137,5,'papiola',255,150,1,12
+execute ins_nuevo_producto 'MC2022123450',123456783138,5,'papupapiola',255,255,1,12
 
 execute ins_controlActivos 1,'E12345',123456789123,'2022-05-03',15,15
 
-delete from  productos where codigoProducto=123456789136
-
-
-
-select * from productos
 
 
 

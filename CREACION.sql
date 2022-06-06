@@ -4,6 +4,7 @@ USE [MOLINASOFTWARE]
  -------------------------------DATATYPE+RULE---------------------------
 
  ------------------Formato Telefonos ---------------------------
+ go
 CREATE RULE RTelefono AS 
 	@telefono like ('[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]')
 GO
