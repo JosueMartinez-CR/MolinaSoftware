@@ -1,10 +1,13 @@
 CREATE DATABASE MOLINASOFTWARE
-USE [MOLINASOFTWARE]
+go
 
+USE [MOLINASOFTWARE]
+go
  -------------------------------DATATYPE+RULE---------------------------
 
  ------------------Formato Telefonos ---------------------------
- go
+
+
 CREATE RULE RTelefono AS 
 	@telefono like ('[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]')
 GO
@@ -59,6 +62,7 @@ GO
 CREATE TABLE supermercado (
 	idSupermercado tinyint NOT NULL PRIMARY KEY 
 	);
+go
 
 CREATE TABLE telefonosSupermecado (
 	idSupermercado tinyint NOT NULL,
@@ -68,11 +72,11 @@ CREATE TABLE telefonosSupermecado (
 		primary key (idSupermercado,telefono),
 
 	constraint FK_telefonos_supermercado_id
-		foreign key (idSupermercado) references supermercado,
-
-
+		foreign key (idSupermercado) references supermercado 
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 	);
-
+go
 
 
 CREATE TABLE correosSupermercado (
@@ -82,17 +86,20 @@ CREATE TABLE correosSupermercado (
 	constraint PK_correos_supermercado
 		primary key (idSupermercado,correo),
 
-	constraint FK_correo_supermercado_id
-		foreign key (idSupermercado) references supermercado,
+constraint FK_correo_supermercado_id
+		foreign key (idSupermercado) references supermercado
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 
 	
 );
+go
 -------------------------------------------Direcciones-----------------------------------
 CREATE TABLE provincia (
 	idProvincia tinyint NOT NULL PRIMARY KEY,
 	nombre varchar(30) NOT NULL
 );
-
+go
 
 CREATE TABLE canton (
 	idCanton tinyint NOT NULL PRIMARY KEY,
@@ -100,8 +107,11 @@ CREATE TABLE canton (
 	nombre varchar(30) NOT NULL
 
 	constraint FK_canton_provincia_
-		foreign key (idProvincia) references provincia,
+		foreign key (idProvincia) references provincia
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
+go
 
 
 CREATE TABLE distrito (
@@ -110,9 +120,11 @@ CREATE TABLE distrito (
 	nombre varchar(32) NOT NULL
 
 	constraint FK_distrito_canton
-		foreign key (idCanton) references canton,
+		foreign key (idCanton) references canton
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
-
+go
 
 
 CREATE TABLE direccionSupermercado (
@@ -123,10 +135,16 @@ CREATE TABLE direccionSupermercado (
 	constraint PK_direccion
 		primary key (idSupermercado,idDistrito),
 	constraint FK_direccion_distrito
-		foreign key (idDistrito) references distrito,
+		foreign key (idDistrito) references distrito
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+
 	constraint FK_direccion_supermercado
-		foreign key (idSupermercado) references supermercado,
+		foreign key (idSupermercado) references supermercado
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
+go
 
 ------------------------------Almacenamientos------------------------------
 CREATE TABLE zonaAlmacenamiento (
@@ -136,7 +154,10 @@ CREATE TABLE zonaAlmacenamiento (
 	
 	constraint FK_zonaAlm_supermercado 
 		foreign key (idSupermercado) references supermercado
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
+go
 
 CREATE TABLE categoria (
 	idCategoria smallint NOT NULL PRIMARY KEY,
@@ -146,8 +167,10 @@ CREATE TABLE categoria (
 
 	constraint FK_categotia_zonaAlm 
 		foreign key (idZonaAlmacenamiento) references zonaAlmacenamiento
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
-
+go
 
 
 
@@ -160,27 +183,33 @@ CREATE TABLE trabajador(
 	apellido2 varchar (32) NOT NULL,
 
 	constraint FK_trabajador_supermercado
-		foreign key (idSupermercado) references supermercado,
+		foreign key (idSupermercado) references supermercado
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
-
+go
 
 CREATE TABLE empleado(
 	codigoEmpleado FcodigoEmpleado PRIMARY KEY,
 	idTrabajador int NOT NULL, 
 
 	constraint FK_empleado_trabajador
-		foreign key (idTrabajador) references trabajador,
-
+		foreign key (idTrabajador) references trabajador
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
+go
 
 CREATE TABLE administrador(
 	codigoAdministrador FcodigoAdmin PRIMARY KEY,
 	idTrabajador int NOT NULL,
 
 	constraint FK_admin_trabajador
-		foreign key (idTrabajador) references trabajador,
+		foreign key (idTrabajador) references trabajador
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
-
+go
 
 -------------------------------------------Proveedores------------------------------------
 CREATE TABLE proveedores (
@@ -188,7 +217,7 @@ CREATE TABLE proveedores (
 	nombre varchar(32) NOT NULL,
 	
 	);
-
+go
 	
 
 CREATE TABLE telefonosProveedores (
@@ -199,10 +228,12 @@ CREATE TABLE telefonosProveedores (
 		primary key (idProveedor,telefono),
 
 	constraint FK_telefonos_proveedor_id
-		foreign key (idProveedor) references proveedores,
-
+		foreign key (idProveedor) references proveedores
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 	
 	);
+go
 
 CREATE TABLE correosProveedores (
 	idProveedor tinyint NOT NULL,
@@ -212,9 +243,11 @@ CREATE TABLE correosProveedores (
 		primary key (idProveedor,correo),
 
 	constraint FK_correo_proveedor_id
-		foreign key (idProveedor) references proveedores,
+		foreign key (idProveedor) references proveedores
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
-
+go
 
 CREATE TABLE mercaderia (
 	 idMercaderia FidMercaderia PRIMARY KEY,
@@ -224,10 +257,16 @@ CREATE TABLE mercaderia (
 	 cantidadProductos int NOT NULL
 
 	 constraint FK_mercaderia_proveedor
-		foreign key (idProveedor) references proveedores,
+		foreign key (idProveedor) references proveedores
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	 
 	 constraint FK_mercaderia_Admin
-		foreign Key (codigoAdministrador) references administrador,
+		foreign Key (codigoAdministrador) references administrador
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 );
+		go
 
 CREATE TABLE productos (
 	codigoProducto char(12) NOT NULL PRIMARY KEY,
@@ -238,10 +277,13 @@ CREATE TABLE productos (
 	estado tinyint NOT NULL,
 	cantidad int NOT NULL
 
-	
-);
+	constraint FK_productos_categoria 
+		foreign key (idCategoria) references  categoria
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
 
-Alter table productos drop constraint FK_productos_categoria
+);
+		go
 
 -------Un producto puede venir de varias mercaderias, es decir, la semana pasada trajeron caja
 ---esta semana volvieron a traer (son diversas mercaderias)
@@ -251,20 +293,20 @@ CREATE TABLE mercaderiaProductos (
 	codigoProducto char(12),
 	cantidadProducts smallint,
 
-
-
 	constraint PK_productos_mercaderia 
 		primary key (idMercaderia,codigoProducto),
 
 	constraint FK_productos_mercaderia
-		foreign key (idMercaderia) references mercaderia,
+		foreign key (idMercaderia) references mercaderia
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+
 	constraint FK_mercaderia_productos
-		foreign key (codigoProducto) references productos,
-	
+		foreign key (codigoProducto) references productos
+		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
-
+go
 
 ------------------------------------------Control de Activos-----------------------------
 CREATE TABLE controlActivos(
@@ -276,12 +318,15 @@ CREATE TABLE controlActivos(
 	cantidadEnSistema int NOT NULL
 
 	constraint controlActivos_empleado
-		foreign key (codigoEmpleado) references empleado,
+		foreign key (codigoEmpleado) references empleado
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+
 	constraint controlActivos_producto
-		foreign key (codigoProducto) references productos,
+		foreign key (codigoProducto) references productos
+		ON DELETE NO ACTION ON UPDATE NO ACTION
 );
-
-
+GO
 
 
 
@@ -294,11 +339,19 @@ CREATE TABLE supercadoProveedores (
 
 	constraint supermercado_proveedores 
 		primary key (idSupermercado,idProveedor),
+
 	constraint supercadoProveedores_supermercado
-		foreign key(idSupermercado) references supermercado,
+		foreign key(idSupermercado) references supermercado
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	
 	constraint supercadoProveedores_proveedores
-		foreign key (idProveedor) references proveedores,
-  );
+		foreign key (idProveedor) references proveedores
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+		);
+
+		go
 
 
 
