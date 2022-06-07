@@ -495,7 +495,7 @@ select p.nombre, t.telefono from proveedores p, telefonosProveedores t where p.i
 
 
 
-
+go
 
 
 create view info_controles_mercaderia as 
@@ -503,7 +503,6 @@ select t.nombre+' '+t.apellido1+' '+t.apellido2 as nombre_completo,a.codigoAdmin
 union
 select t.nombre+' '+t.apellido1+' '+t.apellido2 as nombre_completo,e.codigoEmpleado from trabajador t, empleado e where t.idTrabajador=e.idTrabajador
 
-select * from trabajador
 
 
 
@@ -512,7 +511,7 @@ go
 ----------procedimientos con trigger-------------
 create or alter trigger trigger_evita_mod_supermercado
 on supermercado 
-for insert,update
+for insert
 as 
 	declare 
 		@cantSupermercado tinyint;
@@ -531,7 +530,7 @@ go
 
 create or alter trigger dbo.trigger_validar_telefono_proveedor
 on telefonosProveedores
-for insert,update
+for insert
 as
 	declare
 		@cant_telefonos tinyint,
@@ -552,7 +551,7 @@ go
 
 create or alter trigger dbo.trigger_validar_correo_proveedor
 on correosProveedores
-for insert,update
+for insert
 as
 	declare
 		@cant_correos tinyint,
@@ -581,7 +580,7 @@ go
 
 create or alter trigger dbo.trigger_validar_telefonos_supermercado
 on telefonosSupermecado
-for insert,update
+for insert
 as
 	declare
 		@cant_telefonos tinyint,
@@ -602,7 +601,7 @@ as
 go
 create or alter trigger dbo.trigger_validar_correos_supermercado
 on correosSupermercado
-for insert,update
+for insert
 as
 	declare
 		@cant_correos tinyint,
@@ -622,7 +621,185 @@ as
 
 
 go
+--------------------------------borrar
+CREATE PROCEDURE del_mercaderia 
+	 @idMercaderia FidMercaderia
 
+AS
+	declare
+		@error bit;
+		set @error='False';
+
+	begin tran	
+	    
+		delete from mercaderia where idMercaderia=@idMercaderia;
+
+	if @@error>0
+		begin
+			print ('No se borró la mercaderia')
+			rollback transaction
+		end
+		else
+		begin
+			print ('Se borró la mercadería')
+			commit transaction
+		end;
+go
+
+
+CREATE PROCEDURE del_proveedor 
+	 @idProveedor tinyint
+
+AS
+	declare
+		@error bit;
+		set @error='False';
+
+	begin tran	
+	    
+		delete from proveedores where idProveedor=@idProveedor;
+		delete from supercadoProveedores where idProveedor=@idProveedor;
+		delete from telefonosProveedores where idProveedor=@idProveedor;
+		delete from correosProveedores where idProveedor=@idProveedor;
+	if @@error>0
+		begin
+			print ('No se borró el proveedor')
+			rollback transaction
+		end
+		else
+		begin
+			print ('Se borró el proveedor')
+			commit transaction
+		end;
+go
+
+CREATE PROCEDURE del_telfonoProveedor 
+	 @idProveedor tinyint
+
+AS
+	declare
+		@error bit;
+		set @error='False';
+
+	begin tran	
+	    
+		delete from telefonosProveedores where idProveedor=@idProveedor;
+		
+	if @@error>0
+		begin
+			print ('No se borró el telefono')
+			rollback transaction
+		end
+		else
+		begin
+			print ('Se borró el telefono')
+			commit transaction
+		end;
+
+go
+
+CREATE PROCEDURE del_correoProveedor 
+	 @idProveedor tinyint
+
+AS
+	declare
+		@error bit;
+		set @error='False';
+
+	begin tran	
+	    
+		delete from proveedores where idProveedor=@idProveedor;
+		delete from supercadoProveedores where idProveedor=@idProveedor;
+		delete from telefonosProveedores where idProveedor=@idProveedor;
+		delete from correosProveedores where idProveedor=@idProveedor;
+	if @@error>0
+		begin
+			print ('No se borró el proveedor')
+			rollback transaction
+		end
+		else
+		begin
+			print ('Se borró el proveedor')
+			commit transaction
+		end;
+go
+
+CREATE PROCEDURE del_supermercado 
+	 @idSupermercado tinyint
+
+AS
+	declare
+		@error bit;
+		set @error='False';
+
+	begin tran	
+	    
+		delete from supermercado where idSupermercado=@idSupermercado;
+		delete from telefonosSupermecado where idSupermercado=@idSupermercado;
+
+		delete from correosSupermercado where idSupermercado=@idSupermercado;
+	if @@error>0
+		begin
+			print ('No se borró el supermercado')
+			rollback transaction
+		end
+		else
+		begin
+			print ('Se borró el supermercado')
+			commit transaction
+		end;
+go
+
+CREATE PROCEDURE del_telefonoSupermercado
+	 @idSupermercado tinyint
+
+AS
+	declare
+		@error bit;
+		set @error='False';
+
+	begin tran	
+
+		delete from telefonosSupermecado where idSupermercado=@idSupermercado;
+
+	if @@error>0
+		begin
+			print ('No se borró el telefono')
+			rollback transaction
+		end
+		else
+		begin
+			print ('Se borró el telefono')
+			commit transaction
+		end;
+go
+
+CREATE PROCEDURE del_correoSupermercado 
+	 @idSupermercado tinyint
+
+AS
+	declare
+		@error bit;
+		set @error='False';
+
+	begin tran	
+
+		delete from correosSupermercado where idSupermercado=@idSupermercado;
+	if @@error>0
+		begin
+			print ('No se borró el correo')
+			rollback transaction
+		end
+		else
+		begin
+			print ('Se borró el correo')
+			commit transaction
+		end;
+go
+
+select * from supercadoProveedores where idProveedor=7
+execute ins_proveedor 7,1, 'chochcohcohco', '1233-2666', 'chochocho@gmail.com'
+execute del_proveedor 7
 -----------------------------indice
 create index idx_productoNombre
 on productos (nombre)
