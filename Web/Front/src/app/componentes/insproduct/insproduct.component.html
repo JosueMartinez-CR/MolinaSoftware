@@ -1,0 +1,78 @@
+           
+           <div >
+            <mat-card class="shipping-card">
+                <mat-card-header>
+                  <mat-card-title>Agregar Producto</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+           
+           <div class="contenedor">
+            <div class="row">
+                <div class="col">
+            
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Mercaderia</mat-label>
+                        <input matInput [(ngModel)]="articuloselect.idMercaderia" type="text" placeholder="Mercaderia">
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Código</mat-label>
+                        <input matInput [(ngModel)]="articuloselect.codigoProducto" type="text" placeholder="Codigo">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Categoría</mat-label>
+                            <mat-select [(ngModel)]="articuloselect.idCategoria" placeholder="Categoria">
+                                <mat-option value=1>Bebida</mat-option>
+                                <mat-option value=2>Verduras</mat-option>
+                                <mat-option value=3>Carnes</mat-option>
+                                <mat-option value=4>Detergentes</mat-option>
+                                <mat-option value=5>Snacks</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+        <div class="row">
+                <div class="col">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput [(ngModel)]="articuloselect.nombre" type="text" placeholder="Nombre">
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Precio Venta</mat-label>
+                        <input matInput [(ngModel)]="articuloselect.precioVenta" type="number" placeholder="Precio Venta">
+                        </mat-form-field>
+                    </div>
+        
+            <div class="col">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Precio Compra</mat-label>
+                            <input matInput [(ngModel)]="articuloselect.precioCompra" type="number" placeholder="Precio Compra">
+                        </mat-form-field>
+                    </div>
+            
+                    <div class="col">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Cantidad</mat-label>
+                            <input matInput [(ngModel)]="articuloselect.cantidad" type="number" placeholder="Cantidad">
+                        </mat-form-field>
+                    </div>
+               
+            
+            </div>
+        </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" type="submit"
+            (click)="this.agregar()">
+            Agregar Producto
+        </button>
+        </mat-card-actions>
+      </mat-card>
+    
+    </div>

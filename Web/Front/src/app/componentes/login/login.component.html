@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" href="./login.css">
+    <link rel="stylesheet" href="/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">
+</head>
+<body>
+   <form method="post" [formGroup]="registerForm">
+   <h1 class="animate__animated animate__backInLeft">MOLINASOFT</h1>
+   <p>Usuario <input type="text" placeholder="MOLINASOFT" name="usuario" disabled=»disabled»></p>
+   <p>Codigo <input type="password" placeholder="Ingrese su codigo" maxlength="6" formControlName="codigo"></p>
+   <button class="button" (click)="log()"> Ingresar </button>
+   
+   </form> 
+</body>
+</html>

@@ -1,0 +1,62 @@
+           
+    <div >
+            <mat-card class="shipping-card">
+                <mat-card-header>
+                  <mat-card-title>Agregar Proveedor</mat-card-title>
+                </mat-card-header>
+    <mat-card-content>
+           
+           <div class="contenedor">
+            <div class="row">
+                <div class="col">
+            
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Código Proveedor</mat-label>
+                        <input matInput [(ngModel)]="proveedorselect.idProveedor" type="text" placeholder="Codigo">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Supermercado</mat-label>
+                            <mat-select [(ngModel)]="proveedorselect.idSupermercado" placeholder="Supermercado">
+                                <mat-option value=1>Supermercado Molina</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+        <div class="row">
+                <div class="col">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput [(ngModel)]="proveedorselect.nombre" type="text" placeholder="Nombre">
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Telefono</mat-label>
+                        <input matInput [(ngModel)]="proveedorselect.telefono" type="text" placeholder="Teléfono">
+                        </mat-form-field>
+                    </div>
+        
+            <div class="col">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Correo</mat-label>
+                            <input matInput [(ngModel)]="proveedorselect.correo" type="text" placeholder="Correo">
+                        </mat-form-field>
+                    </div>
+               
+                
+            </div>
+        </div>
+
+    </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" type="submit"
+            (click)="this.agregar()">
+            Agregar Producto
+        </button>
+        </mat-card-actions>
+      </mat-card>
+    
+    </div>

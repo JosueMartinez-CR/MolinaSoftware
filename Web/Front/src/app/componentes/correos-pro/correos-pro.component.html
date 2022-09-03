@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>MOLINASOFT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+.w3-sidebar {
+  z-index: 3;
+  width: 250px;
+  top: 76px;
+  bottom: 0;
+  height: inherit;
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+
+
+  <div class="w3-top">
+    <div class="w3-bar w3-top w3-left-align w3-large" style="background-color:teal;">
+        <span class="move"></span>
+            
+        <a  class="w3-bar-item w3-button" style="background-color:CadetBlue;"><img src="./../../../../assets/img/logo_molina.jpg" style=" width:60px;height:60px;"></a>
+
+
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+      <i class="fa fa-remove"></i>
+    </a>
+    <h4 class="w3-bar-item"><b>Menu</b></h4>
+    <a class="w3-bar-item w3-button w3-hover-black" href="#">Usuario</a>
+    <a class="w3-bar-item w3-button w3-hover-black"  >Agregar Producto</a>
+  </nav>
+
+  
+  <div class="w3-main" style="margin-left:250px">
+    <div class="w3-row w3-padding-64" style="background-color:Azure" >
+    <div class="w3-twothird w3-container">
+        <div class="divCenter">
+            <table mat-table [dataSource]="datos" class="mat-elevation-z8" #tabla1>
+                <ng-container matColumnDef="Correo">
+                <th mat-header-cell *matHeaderCellDef> Correo </th>
+                <td mat-cell *matCellDef="let correo"> {{correo.correo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef=" ">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let j = index;">
+                    <button mat-mini-fab color="warn" style="margin-left: auto; position: 
+                        relative; z-index: 1; margin-top: auto;" class=tooltip-wrap
+                        (click)="goToEliminar(0,'',j)">
+                        <mat-icon>delete</mat-icon>
+                        <div class="tooltip-content">
+                            <p>Eliminar</p>
+                        </div>
+				    </button>
+                </td>
+                </ng-container>
+
+                
+            
+                <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+                <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+            </table>
+
+            <mat-form-field>
+                <input matInput  type="text" placeholder="Nuevo correo" [(ngModel)]="correo">
+              </mat-form-field>
+            
+              <button mat-raised-button color="primary" type="submit"
+              (click)="this.agregar()">
+              Agregar 
+              </button>
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+</body>
+</html>
+
+

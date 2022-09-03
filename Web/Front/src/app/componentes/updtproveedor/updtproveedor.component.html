@@ -1,0 +1,46 @@
+           
+    <div >
+        <mat-card class="shipping-card">
+            <mat-card-header>
+              <mat-card-title>Modificar Proveedor</mat-card-title>
+            </mat-card-header>
+<mat-card-content>
+       
+       <div class="contenedor">
+        <div class="row">
+            <div class="col">
+        
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Código Proveedor</mat-label>
+                    <input matInput [(ngModel)]="proveedorselect.idProveedor" value="{{this.idProveedor}}" type="text" placeholder="Codigo">
+                    </mat-form-field>
+                </div>
+
+                <div class="col">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Supermercado</mat-label>
+                        <mat-select [(ngModel)]="proveedorselect.idSupermercado" value=1 disabled=»disabled» placeholder="Supermercado">
+                            <mat-option value=1>Supermercado Molina</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput [(ngModel)]="proveedorselect.nombre" value="{{this.nombre}}" type="text" placeholder="Nombre">
+                        </mat-form-field>
+                    </div>
+            </div>
+  
+    </div>
+
+</mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit"
+      (click)="this.modificar_proveedor()"  >
+       Modificar Proveedor
+    </button>
+    </mat-card-actions>
+  </mat-card>
+
+</div>
