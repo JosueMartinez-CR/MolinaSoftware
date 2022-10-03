@@ -9,7 +9,7 @@
   - SQL Server
 
 ###### Front-end development:
+- TypeScript
 - Angular
-- Typescript 
 - HTML 
 - SCSS
